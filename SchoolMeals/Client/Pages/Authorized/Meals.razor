@@ -1,0 +1,27 @@
+﻿@page "/school/{SchoolId:int}/meals"
+
+<PageTopBlock Heading="@Heading" />
+
+<Loading Load="Load" />
+
+@if (!Load)
+{
+    <!--Meals list-->
+    <ListsComponent School="@School" ImgLoadig="true" />
+}
+
+
+@code {
+    [Parameter] public int SchoolId { get; set; }
+    public string Heading { get; set; } = "Måltider";
+    public bool Load { get; set; } = true;
+    public School School { get; set; } = new School();
+
+    protected override async Task OnInitializedAsync()
+    {
+        School = await Http.GetFromJsonAsync<School>("School/" + SchoolId);
+        if (School != null)
+            Heading = School.Name + " Måltider";
+        Load = false;
+    }
+}

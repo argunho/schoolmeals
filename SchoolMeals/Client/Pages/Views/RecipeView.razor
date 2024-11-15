@@ -1,0 +1,12 @@
+﻿@page "/schools/{municipality}/{place}/{school}/recipe/{RecipeId:int}"
+
+
+<ModelView municipality="@municipality" place="@place" school="@school" page="recipe" id="@RecipeId" />
+
+@code {
+    [Parameter] public int RecipeId { get; set; }
+    [Parameter] public string municipality { get; set; }
+    [Parameter] public string place { get; set; }
+    [Parameter] public string school { get; set; }
+
+}

@@ -1,0 +1,40 @@
+﻿@page "/school/{SchoolId:int}/new/recipe"
+@attribute [Authorize]
+
+<GenericModelForm Model="Model" Form="Form" OnValidSubmit="Create" />
+
+@code {
+    private MealRecipeGenericViewModel Model = new MealRecipeGenericViewModel();
+    public FormParams Form = new FormParams();
+    [Parameter] public int SchoolId { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        Form.Heading = "Skapa ny recept";
+        Form.Loading = true;
+        Model.SchoolId = SchoolId;
+        await Task.Delay(100);
+        Form.Loading = false;
+    }
+
+    // Submit method
+    private async Task Create()
+    {
+        if (Model.SchoolId == 0)
+            return;
+
+        Form.Disabled = true;
+        try
+        {
+            var response = await Http.PostAsJsonAsync<MealRecipeGenericViewModel>("Recipe", Model);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Form.Request = response.ReasonPhrase;
+            Form.Response = responseBody;
+        }
+        catch (Exception e)
+        {
+            Form.Request = "BadRequest";
+            Form.Response = "\n\nError => " + e.Message;
+        }
+    }
+}

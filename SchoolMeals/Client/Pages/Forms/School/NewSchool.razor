@@ -1,0 +1,61 @@
+﻿@page "/new/school"
+@attribute [Authorize]
+
+<SchoolForm School="School" Form="Form" OnValidSubmit="Create" />
+
+@code {
+    private SchoolViewModel School = new SchoolViewModel();
+    public FormParams Form = new FormParams();
+    [CascadingParameter] private Task<AuthenticationState> AutheticationState { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        Form.Heading = "Skapa ny skolan";
+        Form.Loading = true;
+        School.Open = true;
+        await Task.Delay(100);
+        Form.Loading = false;
+    }
+
+    // Submit method
+    private async Task Create()
+    {
+        var auth = await AutheticationState;
+        var user = auth.User;
+        if (!user.Identity.IsAuthenticated || School.MunicipalityId == 0)
+            return;
+
+        School.UserEmail = user.Identity.Name;
+
+        Form.Disabled = true;
+        try
+        {
+            var response = await Http.PostAsJsonAsync<SchoolViewModel>("School", School);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Form.Request = response.ReasonPhrase;
+            Form.Response = responseBody;
+        }
+        catch (Exception e)
+        {
+            Form.Request = "BadRequest";
+            Form.Response = "\n\nError => " + e.Message;
+        }
+    }
+}
+
+@*content.Add(JsonContent.Create(School));
+    var requestMessage = new HttpRequestMessage()
+    {
+        Method = new HttpMethod("POST"),
+        RequestUri = new Uri("https://localhost:44311/School"),
+        Content = content
+    };
+
+
+    var response = await Http.SendAsync(requestMessage);
+    var responseStatusCode = response.StatusCode;
+
+    responseBody = await response.Content.ReadAsStringAsync();
+    Console.WriteLine(responseBody);
+    Console.WriteLine(responseStatusCode);
+    Console.WriteLine(response);*@

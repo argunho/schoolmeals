@@ -1,0 +1,116 @@
+﻿<PageTopBlock Heading="@Form.Heading" />
+
+<Response Form="Form" Reset="Reset" />
+
+@if (ChildContent != null)
+{
+    <div class="list-block">
+        <p class="p-label">Välj från en lista med recept</p>
+        <div class="list-wrapper">
+            @ChildContent
+        </div>
+    </div>
+}
+
+<Loading Load="Form.Loading" />
+
+<EditForm Model="Model" OnValidSubmit="OnValidSubmit" style="@((Form.Loading || (Model == null && Form.Edit)) ? "display:none" : "")">
+    <DataAnnotationsValidator />
+
+    <!--School-->
+    <div class="form-group">
+        <label for="list">Skola</label>
+
+        <InputSelect class="form-control" @bind-Value="@Model.SchoolId" disabled="@(Form.Disabled || !Form.Access)" id="list">
+            <option selected="@Model.SchoolId == 0">&nbsp; - Select en skola</option>
+            <GenericFormLists Api="School" Id="@Model.SchoolId" />
+
+            <ValidationMessage For="@(() => @Model.SchoolId)" />
+        </InputSelect>
+    </div>
+
+    @if (ChildContent != null)
+    {
+        <!--Date-->
+        <div class="form-group">
+            <label id="name">Datum</label>
+            <InputDate class="form-control" @bind-Value="@Model.Date" id="name" disabled="@Form.Disabled" />
+            <ValidationMessage For="@(() => Model.Date)" />
+        </div>
+    }
+
+
+    <!--Name-->
+    <div class="form-group">
+        <label id="name">Namn</label>
+        <InputText class="form-control" @bind-Value="@Model.Name" id="name" disabled="@Form.Disabled" />
+        <ValidationMessage For="@(() => Model.Name)" />
+    </div>
+
+
+
+    <!--Ingridients-->
+    <div class="form-group">
+        <label id="text">Ingridienser</label>
+        <InputTextArea class="form-control" @bind-Value="@Model.Ingredients" id="text" disabled="@Form.Disabled"></InputTextArea>
+    </div>
+    <!--Text-->
+    <div class="form-group">
+        <label id="text">Text</label>
+        <InputTextArea class="form-control" @bind-Value="@Model.Text" id="text" disabled="@Form.Disabled"></InputTextArea>
+        <ValidationMessage For="@(() => Model.Text)" />
+    </div>
+
+    <!--File upload-->
+    <FileUpload Form="Form" UploadImage="@(async () => await UploadImage(Form))" />
+
+    <!--Buttons-->
+    <Buttons Waiting="Form.Disabled" />
+</EditForm>
+
+
+@code {
+    [Parameter] public MealRecipeGenericViewModel Model { get; set; }
+    [Parameter] public FormParams Form { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Parameter] public EventCallback NavigateToPrevious { get; set; }
+    public bool Once { get; set; } = false;
+
+    // Upload file
+    private async Task UploadImage(FormParams form = null)
+    {
+        await Task.Delay(100);
+
+        Model.FileName = (form != null) ? form.FileName : null;
+        Model.File = (form != null) ? form.FileBinary : null;
+    }
+
+    // Reset Form after request from server
+    protected void Reset()
+    {
+        if (Form.Request == "OK" && !Form.Edit)
+        {
+            Form.Image = false;
+            var schoolId = Model.SchoolId;
+            Model = new MealRecipeGenericViewModel();
+            Form.Disabled = false;
+            Form.Request = null;
+            Model.SchoolId = schoolId;
+        }
+        else if (Form.Request == "OK")
+        {
+            @inject IJSRuntime js;
+            if (!Once)
+            {
+                Once = true;
+                js.GoBack();
+            }
+            //NavigateToPrevious.InvokeAsync();
+        }
+        else
+        {
+            Form.Disabled = false;
+        }
+    }
+}

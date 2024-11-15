@@ -1,0 +1,60 @@
+﻿@page "/new/meal"
+@page "/school/{SchoolId:int}/new/meal"
+@attribute [Authorize]
+
+<GenericModelForm Model="Model" Form="Form" OnValidSubmit="Create">
+    <GenericModelList Api="@Api" SetParams="SetParams" />
+</GenericModelForm>
+
+@code {
+    [Parameter] public int SchoolId { get; set; }
+    private MealRecipeGenericViewModel Model = new MealRecipeGenericViewModel();
+    public FormParams Form = new FormParams();
+    private string Api { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        Form.Heading = "Skapa ny måltid";
+        Form.Loading = true;
+        Model.SchoolId = SchoolId;
+        Api = "Recipe/GetBySchoolId/" + SchoolId;
+        await Task.Delay(100);
+        Form.Loading = false;
+    }
+
+    // Choosed recipe
+    private async Task SetParams(MealRecipeGenericViewModel recipe)
+    {
+        Form.Loading = true;
+        Model.Name = recipe.Name;
+        Model.Ingredients = recipe.Ingredients;
+        Model.Text = recipe.Text;
+        Model.RecipeId = recipe.Id;
+        Form.File = recipe.ImgUrl;
+        Model.ImgUrl = recipe.ImgUrl;
+        Form.Image = (Form.File != null);
+        await Task.Delay(500);
+        Form.Loading = false;
+    }
+
+    // Submit method
+    private async Task Create()
+    {
+        if (Model.SchoolId == 0)
+            return;
+
+        Form.Disabled = true;
+        try
+        {
+            var response = await Http.PostAsJsonAsync<MealRecipeGenericViewModel>("Meal", Model);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Form.Request = response.ReasonPhrase;
+            Form.Response = responseBody;
+        }
+        catch (Exception e)
+        {
+            Form.Request = "BadRequest";
+            Form.Response = "\n\nError => " + e.Message;
+        }
+    }
+}

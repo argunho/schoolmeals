@@ -1,0 +1,34 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <div class="panel-container @((DisplayMenu) ? "display-panel" : "")">
+            <div class="panel-wrapper">
+                <h3>Kontrollpanel</h3>
+
+                <!--Control panel menu-->
+                <ul class="panel-menu-block">
+                        @foreach (var m in Menu.Where(x => x.Visible).OrderBy(x => x.Id))
+                        {
+                            <li class="panel-link" @onclick="@(() => DropdownMenu(m.Id))">
+                                <span class="panel-link-name">@m.Name</span>
+                                <span class="oi @((menuId == m.Id) ? "oi-caret-top" : "oi-caret-bottom")"></span>
+
+                                <!--Submenu-->
+                                <ul class="submenu-block @((menuId == m.Id) ? "submenu-block-expand" : "")"
+                                    style="height: @((menuId == m.Id) ? "calc((55px * " + @m.Submenus.Where(x => x.Access).Count() + ") + 30px)" : 0)">
+                                    @foreach (var s in m.Submenus.Where(x => x.Access).OrderBy(x => x.Id))
+                                    {
+                                        <li class="panel-sublink">
+                                            <NavLink href="@s.Link">
+                                                <span class="oi oi-arrow-right"></span>&nbsp; @s.Name
+                                            </NavLink>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                </ul>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+

@@ -1,0 +1,31 @@
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(Program).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <Authorizing>
+                    <Loading Load="true" />
+                </Authorizing>
+                <NotAuthorized>
+                    @if (!context.User.Identity.IsAuthenticated)
+                    {
+                        <Redirect Uri="/login" />
+                    }
+                    else
+                    {
+                        @*<p>You are not authorized to access this resource.</p>*@
+                        <div class="alert alert-danger text-dark">
+                            Du har inte behörighet att komma åt den här resursen.
+                        </div>
+                    }
+                </NotAuthorized>
+            </AuthorizeRouteView>
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <div class="alert alert-warning text-dark">
+                    Det finns tyvärr inget på den här adressen.
+                </div>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

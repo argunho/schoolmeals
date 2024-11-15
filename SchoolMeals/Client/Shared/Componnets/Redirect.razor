@@ -1,0 +1,11 @@
+﻿<!--Redirect componet-->
+@code {
+    [Parameter] public string Uri { get; set; }
+    [Parameter] public int Seconds { get; set; } = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(Seconds);
+        Navigation.NavigateTo("/" + Uri);
+    }
+}

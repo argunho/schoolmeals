@@ -1,0 +1,81 @@
+﻿@page "/"
+@page "/schools/{municipality}"
+@page "/schools/{municipality}/{place}"
+
+<AuthorizeView Roles="@ADMINISTRATION_ROLE">
+    <p>You are an Administrator</p>
+</AuthorizeView>
+
+
+<Loading Load="Loading" />
+
+@if (!Loading)
+{
+    <!--Breadcrumbs-->
+    <div class="view-breadcrumbs p-0">
+        <div class="view-breadcrumbs-links">
+            <a href="/">Alla skolor</a>
+
+            @if (place != null)
+            {
+                <span>/ <a href="/schools/@municipality">@schools[0].Municipality.Name</a> / @schools[0].Place</span>
+            }
+            else if (municipality != null)
+            {
+                <span>/ @schools[0].Municipality.Name</span>
+            }
+        </div>
+    </div>
+
+    if (schools.Count() > 0)
+    {
+        <div class="row">
+            @foreach (var s in schools)
+            {
+                <div class="card col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="boxshadow">
+                        <div class="card-image-holder">
+                            <img class="card-img-top" src="@s.ImgUrl" alt="@s.Name">
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-title">@s.Name</h4>
+                            <p class="card-text"><span>Kommun:</span> @s.Municipality?.Name</p>
+                            <p class="card-text"><span>Ort:</span> @s.Place</p>
+                        </div>
+                        <div class="card-clear-block">
+                        </div>
+                        <a href="schools/@s.Link" class="btn btn-primary">Öppna</a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <NotFound />
+    }
+}
+
+
+@code{
+    public bool Loading { get; set; } = true;
+    public bool Sort { get; set; }
+    [Parameter] public string municipality { get; set; }
+    [Parameter] public string place { get; set; }
+    public List<School> schools;
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    string ADMINISTRATION_ROLE = "Administrators";
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        schools = await Http.GetFromJsonAsync<List<School>>("School");
+        if (place != null)
+            schools = schools.Where(x => x.Link.IndexOf(municipality + "/" + place) != -1).ToList();
+        else if (municipality != null)
+            schools = schools.Where(x => x.Link.IndexOf(municipality) != -1).ToList();
+        await Task.Delay(500);
+        Loading = false;
+    }
+}

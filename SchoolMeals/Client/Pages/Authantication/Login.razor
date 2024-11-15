@@ -1,0 +1,84 @@
+﻿@page "/login"
+
+<AuthorizeView>
+    <Authorized>
+        <Redirect />
+    </Authorized>
+</AuthorizeView>
+
+@*<RedirectToLogin />*@
+<div class="row mt-5">
+    <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12 m-auto mt-5 p-5 pb-1 boxshadow">
+        <h4>Logga in</h4>
+        <hr />
+
+        <!--Response-->
+        <Response Form="Form" />
+
+        <EditForm Model="Model" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+
+            <!--Email-->
+            <div class="form-group">
+                <label id="name">Email</label>
+                <InputText class="form-control" @bind-Value="@Model.Email" id="name" disabled="@Form.Disabled" />
+                <ValidationMessage For="@(() => Model.Email)" />
+            </div>
+
+            <!--Password-->
+            <div class="form-group">
+                <label id="password">Lösenord</label>
+                <InputText type="password" class="form-control" @bind-Value="@Model.Password" id="password" disabled="@Form.Disabled" />
+                <ValidationMessage For="@(() => Model.Password)" />
+            </div>
+
+            <!--Checkobx-->
+            <div class="form-group m-3">
+                <div class="form-check">
+                    <InputCheckbox class="form-check-input" @bind-Value="@Model.Remember" id="check" disabled="@Form.Disabled" />
+                    <label class="form-check-label" for="check">
+                        Kom ihåg mig
+                    </label>
+                </div>
+            </div>
+
+            <!--Buttons-->
+            <Buttons />
+        </EditForm>
+        <hr />
+        <div class="col-12 text-center">
+            <a class="btn btn-link text-secondary text-decoration-none" href="/register">Skapa konto</a> |
+            <a class="btn btn-link text-secondary text-decoration-none" href="password/reset">Glömt lösenord?</a>
+        </div>
+    </div>
+</div>
+
+@code{
+    private FormParams Form { get; set; } = new FormParams();
+    private LoginViewModel Model { get; set; } = new LoginViewModel();
+
+    protected async Task OnValidSubmit()
+    {
+        Form.Disabled = true;
+        try
+        {
+            var response = await Http.PostAsJsonAsync<LoginViewModel>("Account/Login", Model);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var request = response.ReasonPhrase;
+
+            if (request != "OK")
+            {
+                Form.Request = request;
+                Form.Response = responseBody;
+            }
+            else
+                Navigation.NavigateTo("/Login", true);
+        }
+        catch (Exception e)
+        {
+            Form.Request = "BadRequest";
+            Form.Response = "\n\nError => " + e.Message;
+        }
+    }
+}
+

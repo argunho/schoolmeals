@@ -1,0 +1,55 @@
+﻿@inject IHelpRepository _help;
+
+
+<div class="view-weeks-sort-wrapper">
+    <!--School Meals title-->
+    <h4 class="pr-2 pl-2">Måltider</h4>
+
+    <!--Sort-->
+    <div class="view-sort-buttons-wrapper">
+        <button type="button" class="btn btn-outline-primary" @onclick="@(() => SortListByWeek(-7))"><span class="oi oi-caret-left"></span></button>
+        <div class="view-list-week">
+            <button class="btn btn-outline-primary" type="button">Vecka @_help.ReturnWeek(date) &nbsp;&nbsp; @date.Year</button>
+            <input type="date" @bind="@date" />
+            @date
+        </div>
+        <button type="button" class="btn btn-outline-primary" @onclick="@(() =>  SortListByWeek(7))"><span class="oi oi-caret-right"></span></button>
+    </div>
+</div>
+
+<!--Meals list-->
+<div class="view-list-block">
+    <!--Loading-->
+    <Loading Load="@Load" Img="@ImgLoadig" />
+
+    @if (!Load)
+    {
+        <GenericModelList Api="@Api" School="@School.Name" View="true" Link="meal"/>
+    }
+</div>
+
+
+@code {
+    [Parameter] public bool ImgLoadig { get; set; } = false;
+    [Parameter] public School School { get; set; } = new School();
+    public string Api { get; set; }
+    private bool Load { get; set; } = true;
+    private DateTime date { get; set; } = DateTime.Now;
+    private DateTime CurrentDate { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        Api = "Meal/GetBySchoolIdAndCurrentWeek/" + School.Id;
+        Load = false;
+    }
+
+    private async Task SortListByWeek(int num = 0)
+    {
+        Load = true;
+        date = date.AddDays(num);
+        Api = "Meal/GetBySchoolId/" + School.Id + "/week/" + _help.ReturnWeek(date) + "/year/" + date.Year;
+
+        await Task.Delay(1000);
+        Load = false;
+    }
+}

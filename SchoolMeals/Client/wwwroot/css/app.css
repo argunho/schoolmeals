@@ -1,0 +1,325 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+a {
+    text-decoration: none;
+    line-height: 0;
+}
+
+a, .btn-link {
+    color: #0366d6;
+}
+
+li {
+    list-style: none;
+    line-height: 0;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.main {
+    display: block;
+    width: 100%;
+    margin: 0;
+    height: 100%;
+    transition: all 0.7s ease-in-out;
+}
+
+    .main.block-compression {
+        width: calc(100% - 400px) !important;
+    }
+
+    .main > .container {
+        padding: 10px;
+        min-height: calc(100vh - 200px);
+        max-width: 1300px;
+        clear: both;
+        background: #FFF;
+        -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+        box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    }
+
+.background {
+    /*Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#f1da36+0,fefcea+100*/
+    background: #f1da36;
+    background: -moz-linear-gradient(top, #f1da36 0%, #fefcea 100%);
+    background: -webkit-linear-gradient(top, #f1da36 0%,#fefcea 100%);
+    background: linear-gradient(to bottom, #f1da36 0%,#fefcea 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1da36', endColorstr='#fefcea',GradientType=0 );
+    /*background: #ffad21;*/ /* Old browsers */
+    /*background: -moz-linear-gradient(top, #ffad21 0%, #fefcea 100%);*/ /* FF3.6-15 */
+    /*background: -webkit-linear-gradient(top, #ffad21 0%,#fefcea 100%);*/ /* Chrome10-25,Safari5.1-6 */
+    /*background: linear-gradient(to bottom, #ffad21 0%,#fefcea 100%);*/ /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    /*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffad21', endColorstr='#fefcea',GradientType=0 );*/ /* IE6-9 */
+}
+
+.load-img {
+    margin: calc(30vh - 50px) auto;
+    display: block;
+}
+
+/* Loading block */
+.loading-wrapper {
+    width: 100%;
+    height: 100vh;
+    background: url(../images/bg/school-meals.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    position: relative;
+}
+
+.loading-curtain {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.loading-title {
+    width: 100%;
+    text-align: center;
+    margin-top: 200px;
+    font-size: 170px;
+    font-family: Harrington;
+}
+
+    .loading-title > span:first-child {
+        color: #000;
+    }
+
+    .loading-title > span:last-child {
+        color: #FFA200;
+    }
+
+.loading-img {
+    width: 100px;
+    height: 100px;
+    margin: 30px auto;
+    display: block;
+}
+
+/* Useful styles */
+.boxshadow {
+    -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
+}
+
+.empty {
+    width: 90%;
+    margin: 50px auto;
+    background: #FFF;
+    padding: 50px 0;
+}
+
+    .empty > img {
+        max-width: 80%;
+        display: block;
+        margin: auto;
+    }
+
+/* Empty block */
+.not-found {
+    display: block;
+    width: 100%;
+    padding: 25px 10px;
+    border: 1px solid rgba(3, 102, 214, 0.20);
+    background: rgba(3, 102, 214, 0.20);
+    border-radius: 1px;
+    overflow: hidden;
+    font-size: 20px;
+    line-height: unset !important;
+    font-family: Dubai;
+    width: 100%;
+}
+
+/* Loading fountain points */
+#fountainG {
+    position: relative;
+    width: 234px;
+    height: 28px;
+    margin: 70px calc(50% - 117px);
+    display: block;
+}
+
+.fountainG {
+    position: absolute;
+    top: 0;
+    background-color: rgb(0,0,0);
+    width: 28px;
+    height: 28px;
+    animation-name: bounce_fountainG;
+    -o-animation-name: bounce_fountainG;
+    -ms-animation-name: bounce_fountainG;
+    -webkit-animation-name: bounce_fountainG;
+    -moz-animation-name: bounce_fountainG;
+    animation-duration: 1.5s;
+    -o-animation-duration: 1.5s;
+    -ms-animation-duration: 1.5s;
+    -webkit-animation-duration: 1.5s;
+    -moz-animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    -o-animation-iteration-count: infinite;
+    -ms-animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    animation-direction: normal;
+    -o-animation-direction: normal;
+    -ms-animation-direction: normal;
+    -webkit-animation-direction: normal;
+    -moz-animation-direction: normal;
+    transform: scale(.3);
+    -o-transform: scale(.3);
+    -ms-transform: scale(.3);
+    -webkit-transform: scale(.3);
+    -moz-transform: scale(.3);
+    border-radius: 19px;
+    -o-border-radius: 19px;
+    -ms-border-radius: 19px;
+    -webkit-border-radius: 19px;
+    -moz-border-radius: 19px;
+}
+
+#fountainG_1 {
+    left: 0;
+    animation-delay: 0.6s;
+    -o-animation-delay: 0.6s;
+    -ms-animation-delay: 0.6s;
+    -webkit-animation-delay: 0.6s;
+    -moz-animation-delay: 0.6s;
+}
+
+#fountainG_2 {
+    left: 29px;
+    animation-delay: 0.75s;
+    -o-animation-delay: 0.75s;
+    -ms-animation-delay: 0.75s;
+    -webkit-animation-delay: 0.75s;
+    -moz-animation-delay: 0.75s;
+}
+
+#fountainG_3 {
+    left: 58px;
+    animation-delay: 0.9s;
+    -o-animation-delay: 0.9s;
+    -ms-animation-delay: 0.9s;
+    -webkit-animation-delay: 0.9s;
+    -moz-animation-delay: 0.9s;
+}
+
+#fountainG_4 {
+    left: 88px;
+    animation-delay: 1.05s;
+    -o-animation-delay: 1.05s;
+    -ms-animation-delay: 1.05s;
+    -webkit-animation-delay: 1.05s;
+    -moz-animation-delay: 1.05s;
+}
+
+#fountainG_5 {
+    left: 117px;
+    animation-delay: 1.2s;
+    -o-animation-delay: 1.2s;
+    -ms-animation-delay: 1.2s;
+    -webkit-animation-delay: 1.2s;
+    -moz-animation-delay: 1.2s;
+}
+
+#fountainG_6 {
+    left: 146px;
+    animation-delay: 1.35s;
+    -o-animation-delay: 1.35s;
+    -ms-animation-delay: 1.35s;
+    -webkit-animation-delay: 1.35s;
+    -moz-animation-delay: 1.35s;
+}
+
+#fountainG_7 {
+    left: 175px;
+    animation-delay: 1.5s;
+    -o-animation-delay: 1.5s;
+    -ms-animation-delay: 1.5s;
+    -webkit-animation-delay: 1.5s;
+    -moz-animation-delay: 1.5s;
+}
+
+#fountainG_8 {
+    left: 205px;
+    animation-delay: 1.64s;
+    -o-animation-delay: 1.64s;
+    -ms-animation-delay: 1.64s;
+    -webkit-animation-delay: 1.64s;
+    -moz-animation-delay: 1.64s;
+}
+
+
+
+@keyframes bounce_fountainG {
+    0% {
+        transform: scale(1);
+        background-color: rgb(0,0,0);
+    }
+
+    100% {
+        transform: scale(.3);
+        background-color: rgb(255,255,255);
+    }
+}
+
+@-o-keyframes bounce_fountainG {
+    0% {
+        -o-transform: scale(1);
+        background-color: rgb(0,0,0);
+    }
+
+    100% {
+        -o-transform: scale(.3);
+        background-color: rgb(255,255,255);
+    }
+}
+
+@-ms-keyframes bounce_fountainG {
+    0% {
+        -ms-transform: scale(1);
+        background-color: rgb(0,0,0);
+    }
+
+    100% {
+        -ms-transform: scale(.3);
+        background-color: rgb(255,255,255);
+    }
+}
+
+@-webkit-keyframes bounce_fountainG {
+    0% {
+        -webkit-transform: scale(1);
+        background-color: rgb(0,0,0);
+    }
+
+    100% {
+        -webkit-transform: scale(.3);
+        background-color: rgb(255,255,255);
+    }
+}
+
+@-moz-keyframes bounce_fountainG {
+    0% {
+        -moz-transform: scale(1);
+        background-color: rgb(0,0,0);
+    }
+
+    100% {
+        -moz-transform: scale(.3);
+        background-color: rgb(255,255,255);
+    }
+}

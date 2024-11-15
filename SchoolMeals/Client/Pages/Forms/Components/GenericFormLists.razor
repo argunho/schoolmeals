@@ -1,0 +1,22 @@
+﻿
+<option disabed></option>
+@if (List != null)
+{
+    @foreach (var l in List.OrderBy(x => x.Name))
+    {
+        <option value="@l.Id" selected="@(Id == l.Id)">&nbsp; - @l.Name</option>
+    }
+}
+
+@code {
+
+    [Parameter] public string Api { get; set; }
+    [Parameter] public int Id { get; set; }
+    public List<GenericList> List;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        List = await Http.GetFromJsonAsync<List<GenericList>>(Api);
+    }
+}

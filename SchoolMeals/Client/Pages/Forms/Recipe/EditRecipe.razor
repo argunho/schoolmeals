@@ -1,0 +1,62 @@
+﻿@page "/edit/{SchoolId:int}/recipe/{RecipeId:int}"
+@attribute [Authorize]
+
+<GenericModelForm Model="Model" Form="Form" OnValidSubmit="Edit" NavigateToPrevious="@(() => Navigation.NavigateTo($"school/{Model.School.Link}/recipe/{Model.Id}"))" />
+
+@code {
+    private MealRecipeGenericViewModel Model = new MealRecipeGenericViewModel();
+    public FormParams Form = new FormParams();
+    [Parameter] public int RecipeId { get; set; }
+    [Parameter] public int SchoolId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Form.Loading = true;
+        Form.Heading = "Redigera recept ";
+        try
+        {
+            Form.Edit = true;
+            Model = await Http.GetFromJsonAsync<MealRecipeGenericViewModel>("Recipe/GetBySchoolIdAndRecipeId/" + SchoolId + "/" + RecipeId);
+
+            if (Model != null)
+            {
+                Form.Heading += Model.Name;
+                Form.File = Model.ImgUrl;
+                Form.Image = (Form.File != null);
+                Model.SchoolId = Model.School.Id;
+            }
+            else
+            {
+                Form.Request = "BadRequest";
+                Form.Response = "Inga resultat hittades för denna begäran, eller så har du inte tillgång till att redigera den här sidan";
+            }
+
+            await Task.Delay(100);
+            Form.Loading = false;
+        }
+        catch (Exception e)
+        {
+            Form.Loading = false;
+            Form.Request = "Badrequest";
+            Form.Response = "\n\nError => " + e.Message;
+        }
+    }
+
+    // Submit method
+    private async Task Edit()
+    {
+        try
+        {
+            Form.Disabled = true;
+            var response = await Http.PutAsJsonAsync("Recipe/" + RecipeId, Model);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Form.Request = response.ReasonPhrase;
+            Form.Response = responseBody;
+        }
+        catch (Exception e)
+        {
+            Form.Request = "Badrequest";
+            Form.Response = "\n\nError => " + e.Message;
+        }
+    }
+}

@@ -1,0 +1,86 @@
+﻿@page "/register"
+
+<AuthorizeView>
+    <Authorized>
+        <Redirect />
+    </Authorized>
+</AuthorizeView>
+
+<div class="row mt-5">
+    <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12 m-auto mt-5 p-5 pb-1 boxshadow">
+        <h4>Registrering</h4>
+        <hr />
+        <!--Response-->
+        <Response Form="Form" />
+
+        <EditForm Model="Model" OnValidSubmit="Create">
+            <DataAnnotationsValidator />
+            <!--Name-->
+            <div class="form-group">
+                <label id="lastname">Förnamn</label>
+                <InputText class="form-control" @bind-Value="@Model.FirstName" id="lastname" disabled="@Form.Disabled" />
+                <ValidationMessage For="@(() => Model.FirstName)" />
+            </div>
+            <!--Last Name-->
+            <div class="form-group">
+                <label id="name">Efternamn</label>
+                <InputText class="form-control" @bind-Value="@Model.LastName" id="name" disabled="@Form.Disabled" />
+                <ValidationMessage For="@(() => Model.LastName)" />
+            </div>
+            <!--Email-->
+            <div class="form-group">
+                <label id="email">Email</label>
+                <InputText type="email" class="form-control" @bind-Value="@Model.Email" id="email" disabled="@Form.Disabled" />
+                <ValidationMessage For="@(() => Model.Email)" />
+            </div>
+            <!--Password-->
+            <div class="form-group">
+                <label id="pass">Lösenord</label>
+                <InputText type="password" class="form-control" @bind-Value="@Model.Password" id="pass" disabled="@Form.Disabled" />
+                <ValidationMessage For="@(() => Model.Password)" />
+            </div>
+            <!--Confirm Password-->
+            <div class="form-group">
+                <label id="confirm">Bekräfta lösenord</label>
+                <InputText type="password" class="form-control" @bind-Value="@Model.ConfirmPassword" id="confirm" disabled="@Form.Disabled" />
+                <ValidationMessage For="@(() => Model.ConfirmPassword)" />
+            </div>
+            <!--Buttons-->
+            <Buttons />
+        </EditForm>
+        <hr />
+        <div class="col-12 text-center">
+            <a class="btn btn-link text-secondary text-decoration-none" href="/login">Har du redan ett konto? Logga in</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    private FormParams Form { get; set; } = new FormParams();
+    private RegisterViewModel Model { get; set; } = new RegisterViewModel();
+
+    protected async Task Create()
+    {
+        Form.Disabled = true;
+        try
+        {
+            var response = await Http.PostAsJsonAsync<RegisterViewModel>("Account/Register", Model);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var request = response.ReasonPhrase;
+
+            if (request != "OK")
+            {
+                Form.Request = request;
+                Form.Response = responseBody;
+            }
+            else
+                Navigation.NavigateTo("/", true);
+        }
+        catch (Exception e)
+        {
+            Form.Request = "BadRequest";
+            Form.Response = "\n\nError => " + e.Message;
+        }
+    }
+
+}

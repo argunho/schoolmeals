@@ -1,0 +1,123 @@
+﻿
+@inject IFileReaderService FileReader
+<!--File Upload Component-->
+@if (Form.Upload || Form.Image)
+{
+    <div class="form-group img-wrapper">
+        @if (Form.Image)
+        {
+            <div class="col-lg-4 col-md-5 col-sm-6 col-xs-12 img-preview">
+                <img src="@Form.File" alt="" class="img-thumbnail" />
+            </div>
+            <div class="col-lg-8 col-md-7 col-sm-6 col-xs-12 img-info">
+                @if (selectedFile != null)
+                {
+                    <p><span>Namn:</span> @selectedFile.Name </p>
+                    <p><span>Type:</span> @selectedFile.ContentType </p>
+                    <p><span>Size:</span> @selectedFile.Size </p>
+                }
+                else
+                {
+                    <p><span>Namn:</span> @Form.File.Substring(Form.File.LastIndexOf("/") + 1) </p>
+                    <p><span>Type:</span> image/@Form.File.Substring(Form.File.LastIndexOf(".") + 1) </p>
+                    <p><span>Size:</span> ... </p>
+                }
+                <button class="btn btn-outline-primary mt-4" @onclick="ResetImage" disabled="@Form.Disabled">
+                    Ladda upp annan bild ...
+                </button>
+            </div>
+
+        }
+        <Loading Load="Form.Upload" Img="false"/>
+    </div>
+}
+
+<div class="form-group" style="@((Form.Image || Form.Upload) ? "display:none" : "")">
+    <label asp-for="School.File">Ladda upp bilden</label>
+    <div class="custom-file">
+        <InputFile class="form-control custom-file-input" OnChange="OnFileChange" />
+        <label class="custom-file-label">Select bild ...</label>
+    </div>
+    @if (Message != null)
+    {
+        <div class="error-msg">@Message</div>
+    }
+</div>
+
+@*Message*@
+@if (Message != null)
+{
+    <div class="error-msg">
+        @Message
+    </div>
+}
+
+@code {
+    [Parameter] public FormParams Form { get; set; }
+    [Parameter] public EventCallback<FormParams> UploadImage { get; set; }
+
+
+    private string Message = null;
+    //IReadOnlyList<IBrowserFile> selectedFiles;
+    public IBrowserFile selectedFile;
+
+    // File change
+    private async Task OnFileChange(InputFileChangeEventArgs e)
+    {
+        Message = null;
+
+        if (e.File != null)
+        {
+            Form.Upload = true;
+            try
+            {
+                selectedFile = e.File;
+                var format = "image/jpeg";
+
+                // Resize image
+                IBrowserFile resizedFile = await selectedFile.RequestImageFileAsync(format, 800, 800);
+                selectedFile = resizedFile;
+
+                // Print out uploaded image
+                var buffer = new byte[resizedFile.Size];
+                await resizedFile.OpenReadStream().ReadAsync(buffer);
+                Form.File = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+
+                Form.Upload = false;
+                Form.Image = true;
+            }
+            catch (Exception error)
+            {
+                Form.Upload = false;
+                Message = "Kunde öppna bilden ...";
+                Console.WriteLine("File upload error => " + error.Message);
+            }
+        }
+        else
+        {
+            Message = "Ingen bild är selected ...";
+        }
+
+        await Task.Delay(2000);
+        Stream stream = selectedFile.OpenReadStream();
+        MemoryStream ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        stream.Close();
+
+        Form.FileName = selectedFile.Name;
+        Form.FileBinary = ms.ToArray();
+        ms.Close();
+
+        await UploadImage.InvokeAsync(Form);
+        this.StateHasChanged();
+    }
+
+    // Reset image
+    private async Task ResetImage()
+    {
+        Form.Image = false;
+        Form.File = null;
+
+        await UploadImage.InvokeAsync(null);
+    }
+}

@@ -1,0 +1,64 @@
+﻿@if (!Empty && List != null)
+{
+    @foreach (var l in List)
+    {
+        <div class="row generic-list @((l.Id == Id) ? "selected-list-element" : "")" @onclick="@(() => ClickHandle(l))">
+            <div class="col-lg-3 col-md-4 col-sm-5 col-xs-12 img-preview">
+                <img class="img-thumbnail" src="@l.ImgUrl" alt="@l.Name" />
+            </div>
+            <div class="col-lg-9 col-md-8 col-sm-7 col-xs-12 elements-content">
+                @l.Name
+                <div class="elements-content-text">
+                    @CutText(l.Text)
+                </div>
+                <p class="elements-content-date">@l.DayOfWeek @l.Date.ToString("yyyy.MM.dd")</p>
+            </div>
+        </div>
+    }
+}
+else if (Empty && School != null)
+{
+    <div class="alert alert-info text-dark">
+        @School har inga registrerade måltider för denna veckan ...
+    </div>
+}
+
+
+
+@code {
+    [Parameter] public string Api { get; set; }
+    [Parameter] public string School { get; set; } = null;
+    [Parameter] public bool View { get; set; } = false;
+    [Parameter] public int Id { get; set; }
+    [Parameter] public string Link { get; set; }
+    [Parameter] public EventCallback<MealRecipeGenericViewModel> SetParams { get; set; }
+    [Parameter] public List<MealRecipeGenericViewModel> List { get; set; }
+    public bool Empty { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Empty = false;
+        List = await Http.GetFromJsonAsync<List<MealRecipeGenericViewModel>>(Api);
+        if (List.Count() == 0)
+            Empty = true;
+    }
+
+    private string CutText(string text)
+    {
+        if (text.Length > 200)
+        {
+            text = text.Substring(0, 200);
+            text = text.Substring(0, text.LastIndexOf(" ") + 1) + " ...";
+        }
+
+        return text;
+    }
+
+    private void ClickHandle(MealRecipeGenericViewModel model)
+    {
+        if (View)
+            Navigation.NavigateTo($"schools/{model.School.Link}/{Link}/{model.Id}");
+        else
+            SetParams.InvokeAsync(model);
+    }
+}

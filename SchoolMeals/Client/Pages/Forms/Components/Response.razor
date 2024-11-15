@@ -1,0 +1,28 @@
+﻿@inject IJSRuntime js
+
+@if (Form.Request != null)
+{
+    <div class="alert-block" id="alert">
+        <div class="alert @((Form.Request == "OK") ? "alert-success" : "alert-danger") text-dark">
+            @((MarkupString)Form.Response)
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public FormParams Form { get; set; }
+    [Parameter] public EventCallback Reset { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Form.Request == null)
+            return;
+
+
+        await Task.Delay(100);
+        await js.ScrollToElement("alert");
+
+        await Task.Delay(3000);
+        await Reset.InvokeAsync();
+    }
+}

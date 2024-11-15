@@ -1,0 +1,78 @@
+﻿@*@inject SignOutSessionStateManager SignOutManager*@
+
+<div class="header @(((displayMenu) ? "block-compression" : ""))">
+
+    <div class="header-container">
+        <div class="logo">
+            <img src="/images/logo.png" alt="school meals" asp-append-version="true" />
+        </div>
+
+
+        <div class="links-holder">
+            <div class="menu-links-wrapper">
+                <p class="nav-item px-3 menu-links">
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                        <span class="oi oi-home" aria-hidden="true"></span> Hem
+                    </NavLink>
+                </p>
+
+                <AuthorizeView>
+                    <NotAuthorized>
+                        <p class="nav-item px-3 menu-links">
+                            <NavLink class="nav-link" href="login">
+                                <span class="oi oi-account-login" aria-hidden="true"></span> Logga in
+                            </NavLink>
+                        </p>
+                    </NotAuthorized>
+                    <Authorized>
+                        <p class="nav-item px-3 menu-links">
+                            <NavLink class="nav-link" @onclick="BeginSignOut">
+                                <span class="oi oi-account-logout" aria-hidden="true"></span> Logga ut
+                            </NavLink>
+                        </p>
+                        <p class="nav-item px-3 menu-links">
+                            <button class="btn btn-lg " type="button" @onclick="DisplayControlPanel">
+                                <span class="oi @((!displayMenu) ? "oi-menu" : "oi-circle-x")" style="font-size:24px"></span>
+                            </button>
+                        </p>
+                        <!--Control panel for admin-->
+                        <ControlPanel DisplayMenu="displayMenu" HidePanel="DisplayControlPanel" Admin="true" />
+                    </Authorized>
+                </AuthorizeView>
+            </div>
+        </div>
+
+        @*<AuthorizeView>
+            <Authorized>
+                <div class="welcome">
+                        Hello, @context.User.Identity
+                </div>
+            </Authorized>
+        </AuthorizeView>*@
+    </div>
+
+    <!--Curtain empty block-->
+    <div class="header-cortain"></div>
+</div>
+
+
+
+@code {
+
+    string logo = "/images/smlogo.png";
+    bool displayMenu { get; set; } = false;
+    [Parameter] public EventCallback<bool> ExpandMenu { get; set; }
+
+    public void DisplayControlPanel()
+    {
+        displayMenu = !displayMenu;
+        ExpandMenu.InvokeAsync(displayMenu);
+    }
+
+    private async Task BeginSignOut(MouseEventArgs args)
+    {
+        //await SignOutManager.SetSignOutState();
+        await Http.GetAsync("Account/LogOut");
+        Navigation.NavigateTo("/", true);
+    }
+}

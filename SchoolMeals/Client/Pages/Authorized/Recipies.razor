@@ -1,0 +1,33 @@
+﻿@page "/school/{SchoolId:int}/recipes"
+@attribute [Authorize]
+
+<PageTopBlock Heading="@Heading" />
+
+<!--Recipies list-->
+<div class="view-list-block">
+    <!--Loading-->
+    <Loading Load="Load" />
+
+    @if (!Load)
+    {
+        <GenericModelList Api="@Api" School="@School.Name" View="true" Link="recipe"/>
+    }
+</div>
+
+@code {
+    [Parameter] public int SchoolId { get; set; }
+    public School School { get; set; } = new School();
+    public string Api { get; set; }
+    public string Heading { get; set; } = "Recept";
+    public bool Load { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Load = true;
+        Api = "Recipe/GetBySchoolId/" + SchoolId;
+        School = await Http.GetFromJsonAsync<School>("School/" + SchoolId);
+        if (School != null)
+            Heading = School.Name + " Recept";
+        Load = false;
+    }
+}

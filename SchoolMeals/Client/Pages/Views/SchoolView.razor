@@ -1,0 +1,64 @@
+﻿@page "/schools/{municipality}/{place}/{name}"
+
+<Loading Load="Loading" />
+
+@if (!Loading && school != null)
+{
+<div class="view boxshadow">
+    <!--Breadcrumbs-->
+    <div class="view-breadcrumbs">
+        <div class="view-breadcrumbs-links">
+            <a href="/">Alla skolor</a> /
+            <a href="/schools/@municipality">@school.Municipality.Name</a> /
+            <a href="/schools/@municipality/@place">@school.Place</a> / @school.Name
+        </div>
+
+        <GoBackButton ClassName="btn-link" />
+    </div>
+
+    <!--School view-->
+    <div class="view-header">
+        <div class="view-content">
+            <div class="view-image">
+                <img class="view-img img-thumbnail" src="@school.ImgUrl" alt="@school.Name" />
+            </div>
+            <h4>@school.Name</h4>
+            <p><span>Adress:</span> @school.Address, @school.Zip, @school.Place</p>
+            <div>
+                @((MarkupString)Text)
+            </div>
+
+            @if (ReadMore)
+            {
+                <button type="button" class="btn btn-link ml-2" @onclick="@ReadHideText">
+                    @if (HideText)
+                    {
+                        <span class="text-danger">Dölj texten</span>
+                    }
+                    else
+                    {
+                        <span>Visa mer</span>
+                    }
+                </button>
+            }
+        </div>
+
+        <!--Actions buttons-->
+        @if (school != null)
+        {
+            <ActionsButtons Api="School" SchoolView="true" Id="@school.Id" SchoolId="@school.Id" EditLink="@EditLink" />
+        }
+    </div>
+
+    <hr />
+
+    <!--Meals list-->
+    <ListsComponent School="@school" />
+</div>
+}
+else if (!Loading)
+{
+    <NotFound />
+    <Redirect Seconds="2000" />
+}
+

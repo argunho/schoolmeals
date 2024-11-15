@@ -1,0 +1,17 @@
+﻿<div class="form-group mt-3">
+    <button type="submit" class="btn btn-outline-primary btn-lg float-lg-right" disabled="@Waiting">
+        @if (Waiting)
+        {
+            <span class="button-loader"></span>
+        }
+        else
+        {
+            @:Spara
+        }
+    </button>
+    <button type="reset" class="btn btn-outline-danger btn-lg float-lg-right mr-2" disabled="@Waiting">Rensa</button>
+</div>
+
+@code {
+    [Parameter] public bool Waiting { get; set; }
+}

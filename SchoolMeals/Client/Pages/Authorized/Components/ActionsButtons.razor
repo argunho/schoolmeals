@@ -1,0 +1,79 @@
+﻿@inject IJSRuntime js
+
+<AuthorizeView>
+    <Authorized>
+        <!-- Check is it current users school or not -->
+        @if (Access)
+        {
+            @if (!SchoolView)
+            {
+                <hr />
+            }
+            <div class="form-group mt-5 mb-5 p-2 position-relative">
+                @if (SchoolView)
+                {
+                    <button type="button" class="btn btn-outline-secondary float-right ml-2" @onclick="@(() => Visible = !Visible)">
+                        <span class="oi  @(Visible ? "oi-arrow-circle-bottom" : "oi-cog")"></span>
+                    </button>
+
+                    <div class="actions-menu boxshadow @(Visible ? "visible-actions-menu" : "")">
+                        <button class="btn btn-primary actions-link" @onclick="@(() => Navigation.NavigateTo($"/school/{Id}/new/meal"))"><span class="oi oi-inbox"></span>Skapa ny måltid</button>
+                        <button class="btn btn-primary actions-link" @onclick="@(() => Navigation.NavigateTo($"/school/{Id}/new/recipe"))"><span class="oi oi-inbox"></span>Skapa ny recept</button>
+                    </div>
+                }
+
+                <button type="reset" class="btn btn-outline-danger float-right" @onclick="@Delete">Radera</button>
+                <button type="submit" class="btn btn-outline-primary float-right mr-2" @onclick="@NavigateTo">Redigera</button>
+            </div>
+        }
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [Parameter] public string Api { get; set; }
+    [Parameter] public int Id { get; set; }
+    [Parameter] public int SchoolId { get; set; }
+    [Parameter] public string EditLink { get; set; }
+    [Parameter] public bool SchoolView { get; set; }
+    [CascadingParameter] private Task<AuthenticationState> AutheticationState { get; set; }
+
+    public bool Visible { get; set; }
+    public bool Access { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var auth = await AutheticationState;
+        var user = auth.User;
+        if (user.Identity.IsAuthenticated)
+        {
+
+            School school = await Http.GetFromJsonAsync<School>("Users/GetUsersSchool/" + user.Identity.Name);
+
+            if (school != null && school.Id == SchoolId)
+                Access = true;
+        }
+    }
+
+
+    protected void NavigateTo()
+    {
+        Navigation.NavigateTo(EditLink);
+    }
+
+    protected async Task Delete()
+    {
+        var confirm = await js.Confirm("Är du säker på att du vill göra det här?");
+        if (confirm)
+        {
+            await Http.DeleteAsync(Api + "/" + Id);
+            if (SchoolView)
+                Navigation.NavigateTo("/");
+            else
+            {
+                await js.GoBack();
+            }
+        }
+
+    }
+
+}

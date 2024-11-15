@@ -1,0 +1,9 @@
+﻿@inject IJSRuntime js
+
+<button type="button" class="btn btn-lg @ClassName" @onclick="@(async () => await js.GoBack())">
+    Tillbaka
+</button>
+
+@code {
+    [Parameter] public string ClassName { get; set; }
+}

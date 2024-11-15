@@ -1,0 +1,94 @@
+﻿@inject SingletonService singleton
+
+<Loading Load="Loading" />
+
+@if (!Loading && model != null)
+{
+    <div class="view boxshadow">
+        <!--Breadcrumbs-->
+        <div class="view-breadcrumbs">
+            <div class="view-breadcrumbs-links">
+                <a href="/">Alla skolor</a> /
+                <a href="/schools/@municipality">@MunicipalityName</a> /
+                <a href="/schools/@municipality/@place">@model.School.Place</a> /
+                <a href="/schools/@municipality/@place/@school">@model.School.Name</a> / @model.Name
+            </div>
+
+            <GoBackButton ClassName="btn-link" />
+        </div>
+
+
+        <!--Model view-->
+        <div class="view-header">
+            <div class="view-model-content">
+                <div class="view-image view-model-image">
+                    <img class="view-img img-thumbnail" src="@model.ImgUrl" alt="@model.Name" />
+                </div>
+                <h3>@model.Name</h3>
+                <br />
+                <div>
+                    <h4>Ingridienser</h4>
+                    @((MarkupString)model.Ingredients)
+                </div>
+                <div class="clearfix"></div>
+                <br />
+                <div class="col-12">
+                    <h4>Beskrivning</h4>
+                    @((MarkupString)model.Text)
+                </div>
+            </div>
+        </div>
+
+        <!--Actions buttons-->
+        @if (model != null)
+        {
+            <ActionsButtons Api="Meal" Id="@model.Id" EditLink="@EditLink" SchoolId="@model.School.Id" />
+        }
+    </div>
+}
+else if (!Loading)
+{
+    <NotFound />
+    <Redirect Seconds="2000" />
+}
+
+@code {
+    [Parameter] public int id { get; set; }
+    [Parameter] public string municipality { get; set; }
+    [Parameter] public string place { get; set; }
+    [Parameter] public string school { get; set; }
+    [Parameter] public string page { get; set; }
+    public string MunicipalityName { get; set; }
+    public bool Loading { get; set; }
+    public string EditLink { get; set; }
+    private MealRecipeGenericViewModel model = new MealRecipeGenericViewModel();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Loading = true;
+        model = await Http.GetFromJsonAsync<MealRecipeGenericViewModel>($"{page}/{id}");
+        if (model != null)
+        {
+            EditLink = "edit-" + page + "/school/" + model.School.Id + "/" + page + "/" + model.Id;
+
+            // Get municpality for breadcrumbs name if singelton.Param == null
+            if (singleton.Param == null)
+            {
+                try
+                {
+                    Municipality m = await Http.GetFromJsonAsync<Municipality>($"School/GetMunicipalityBySchoolId/{model.School.Id}");
+                    if (m != null)
+                        MunicipalityName = m.Name;
+                }
+                catch (Exception e)
+                {
+                    MunicipalityName = municipality;
+                    Console.WriteLine("Fel: Kunde inte hämtas kommun namn pga => " + e.Message);
+                }
+            }
+            else
+                MunicipalityName = singleton.Param;
+        }
+        Loading = false;
+    }
+}

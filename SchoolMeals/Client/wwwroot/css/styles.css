@@ -1,0 +1,579 @@
+﻿
+
+/* Header menu */
+.header {
+    width: 100%;
+    display: block;
+    height: 200px;
+    line-height: 200px;
+    clear: both;
+    overflow: hidden;
+    /*background: url(../images/bg/meals-bg.jpg);*/
+    background: url(../images/bg/school-meals.jpg);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center 90%;
+    position: relative;
+    transition: all 0.7s ease-in-out;
+}
+
+    .header.block-compression {
+        width: calc(100% - 400px) !important;
+    }
+
+.header-cortain {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    background: rgba(0,0,0, 0.4)
+}
+
+.header-container {
+    width: calc(100% - 100px);
+    /*max-width: 1300px;*/
+    position: absolute;
+    top: 0;
+    /*left: calc(50% - 650px);*/
+    left: 50px;
+    display: block;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.logo {
+    width: auto;
+    height: 80%;
+    text-align: center;
+    font-size: 55px;
+    font-family: Harrington;
+    line-height: 170px;
+    font-weight: 600;
+    z-index: 1000;
+    position: absolute;
+    left: 0;
+    top: 10%;
+    -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.35);
+    -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.35);
+    box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.35);
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&1+0,0.87+100 */
+    background: -moz-linear-gradient(left, rgba(255,255,255,1) 0%, rgba(255,255,255,0.87) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, rgba(255,255,255,1) 0%,rgba(255,255,255,0.87) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, rgba(255,255,255,1) 0%,rgba(255,255,255,0.87) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#deffffff',GradientType=1 ); /* IE6-9 */
+}
+
+.links-holder {
+    width: calc(65% - 140px);
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1000;
+}
+
+.menu-links-wrapper {
+    display: block !important;
+    text-align: right;
+}
+
+.menu-links {
+    display: inline-flex;
+    line-height: 30px;
+}
+
+    .menu-links > a {
+        display: inline-flex;
+        font-size: 25px;
+        font-family: Oswald;
+        color: #FFF;
+        cursor: pointer;
+        transition: all 0.5s ease-in-out;
+    }
+
+        .menu-links > a > span {
+            margin-right: 15px;
+        }
+
+        .menu-links > a:hover {
+            color: #FFA400;
+            transform: scaleY(1.2);
+        }
+
+    .menu-links > button {
+        background: transparent !important;
+        border: 2px solid #FFA400;
+        color: #FFA400;
+    }
+
+        .menu-links > button:hover {
+            background: #FFA400 !important;
+            color: #000;
+        }
+
+/* Control panel */
+.panel-container {
+    width: 400px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: -403px;
+    opacity: 1;
+    z-index: -1;
+    /*background: rgba(128, 128, 128, 0.51);*/
+    transition: all 0.7s ease-in-out;
+    background: url(../images/bg/school-meals.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.display-panel {
+    z-index: 1;
+    /*    opacity: 0;
+    animation: opacity 0.3s;
+    animation-delay: 1s;
+    -webkit-animation-fill-mode: forwards;
+    -moz-animation-fill-mode: forwards;
+    -ms-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;*/
+    right: 0;
+}
+
+/*@keyframes opacity {
+    from {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    to {
+        opacity: 1;
+        pointer-events: unset;
+    }
+}*/
+
+.panel-wrapper {
+    width: 100%;
+    height: 100%;
+    border-left: 3px solid #FFA400;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+    .panel-wrapper > h3 {
+        width: 100%;
+        padding: 20px;
+        text-align: left;
+        color: #FFF;
+        font-family: Oswald;
+    }
+
+.panel-menu-block {
+    width: 100%;
+    display: block;
+    margin-top: 15px;
+    padding: 0 10px !important;
+}
+
+.panel-link, .panel-sublink {
+    display: block;
+    line-height: 0;
+    margin: 3px;
+    cursor: pointer;
+    position: relative;
+}
+
+.panel-link-name {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: #FFF;
+    border-radius: 5px;
+    padding: 0 10px;
+    text-align: left;
+    border: 1px solid #FFF;
+    height: 60px;
+    line-height: 60px;
+    background: rgba(0, 0, 0, 0.5);
+    font-family: Oswald;
+}
+
+    .panel-link-name:hover {
+        border-color: #FFA400;
+        color: #FFA400;
+    }
+
+.panel-link > span.oi {
+    display: block;
+    position: absolute;
+    top: 22.5px;
+    right: 15px;
+    color: #FFF;
+}
+
+.panel-link:hover > span {
+    color: #FFA400;
+}
+
+.submenu-block {
+    height: 0;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
+    width: 100%;
+    margin: 3px 0;
+    padding: 0 10px;
+}
+
+.submenu-block-expand {
+    padding: 10px;
+}
+
+.panel-sublink {
+    height: 55px;
+    line-height: 55px;
+    text-align: left;
+    border: 1px solid #FFF;
+    border-radius: 3px;
+    padding: 0 10px;
+    background: #FFA400;
+}
+
+    .panel-sublink:hover {
+        border-color: #000;
+    }
+
+    .panel-sublink > a {
+        color: #FFF;
+        width: 100%;
+        display: block;
+        padding: 15px 0;
+        text-decoration: none !important;
+        font-family: Oswald;
+    }
+
+    .panel-sublink:hover > a {
+        color: #000 !important;
+    }
+
+/* Form top block */
+.page-top-block {
+    display: block;
+    border: 1px solid #ccc;
+    width: calc(100% + 20px);
+    margin-left: -15px;
+    padding: 40px 10px;
+    position: relative;
+}
+
+    .page-top-block > h3 {
+        font-family: Oswald;
+        display: block;
+        width: auto;
+        color: #000000;
+        margin-left: 15px;
+        width: auto;
+    }
+
+    .page-top-block > button {
+        position: absolute;
+        top: 35px;
+        right: 15px;
+    }
+
+/* Card */
+.card {
+    padding: 8px !important;
+    border-color: transparent !important;
+}
+
+    .card > div.boxshadow {
+        border: 1px solid rgba(0,0,0,.125) !important;
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+
+.card-image-holder {
+    background: rgba(130, 174, 229, 0.1);
+    height: calc(100% - 175px);
+    line-height: 260px;
+    overflow: hidden;
+}
+
+.card-title {
+    color: #FFA400;
+    font-weight: 600;
+    font-family: Dubai;
+}
+
+.card-body > p {
+    margin-bottom: 5px !important;
+}
+
+    .card-body > p > span {
+        display: inherit,inline-block;
+        font-weight: 600;
+        width: 70px;
+    }
+
+.card-clear-block {
+    text-align: right;
+    width: 100%;
+    display: block;
+    height: 10px;
+    margin-top: 25px;
+}
+
+.card a {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+
+/* View */
+.view {
+    width: 100%;
+    margin: 15px auto;
+    display: block;
+    padding: 7px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    margin-left: -5px;
+    min-height: calc(100vh - 250px);
+    border: 1px solid #808080;
+}
+
+.view-header {
+    overflow: hidden;
+    margin-bottom: 10px;
+    padding-bottom: 20px;
+    /*border-bottom: 2px solid rgba(128, 128, 128, 0.39);*/
+}
+
+.view-image, .view-model-image {
+    overflow: hidden;
+    float: left;
+    margin-right: 15px;
+}
+
+.view-image {
+    width: 100%;
+    max-width: 400px;
+}
+
+.view-model-image {
+    width: 50%;
+    max-width: unset;
+}
+
+.view-img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.view-content {
+    width: 100%;
+    padding: 15px 5px;
+    position: relative;
+}
+
+h4 {
+    font-family: Dubai !important;
+}
+
+.view-content > p > span {
+    font-weight: 600;
+    margin-right: 10px;
+    font-family: Bahnschrift;
+}
+
+.view-content > div, .view-model-content > div  {
+    font-family: Constantia;
+    color: #262626;
+}
+
+.view-content > div {
+    font-style: italic;
+}
+
+.view-header .btn-link {
+    text-decoration: none !important;
+    font-family: Constantia !important;
+    position: absolute;
+    bottom: -20px;
+    right: 0;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-size: 12px;
+}
+
+.view-breadcrumbs {
+    width: 100%;
+    height: 70px;
+    line-height: 70px;
+    position: relative;
+    padding: 0 10px;
+    overflow: hidden;
+}
+
+    .view-breadcrumbs .btn-link {
+        float: right;
+        margin: 15px -15px 0 0;
+    }
+
+.view-breadcrumbs-links {
+    float: left;
+    opacity: 0.65;
+}
+
+    .view-breadcrumbs-links,
+    .view-breadcrumbs-links > a,
+    .view-breadcrumbs .btn-link {
+        color: #000;
+        display: inline-block !important;
+        font-family: Bahnschrift;
+        font-size: 18px !important;
+    }
+
+        .view-breadcrumbs-links > a,
+        .view-breadcrumbs .btn-link {
+            text-decoration: none !important;
+            will-change: transform;
+            transition: all 0.5s ease-in-out;
+            color: #008CFF;
+            opacity: 1 !important;
+        }
+
+            .view-breadcrumbs-links a:hover,
+            .view-breadcrumbs .btn-link:hover {
+                transform: scaleY(1.3);
+                color: #060a5a;
+            }
+
+.actions-menu {
+    width: 227px;
+    padding: 12px;
+    position: absolute;
+    bottom: -30px;
+    right: 8px;
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+    z-index: -1;
+    background: #FFF;
+    border: 1px solid rgba(0,0,0,0.35);
+}
+
+.visible-actions-menu {
+    bottom: 20px;
+    opacity: 1;
+    z-index: 1;
+}
+
+.actions-menu > button {
+    width: 100%;
+    margin: 5px auto;
+}
+
+    .actions-menu > button > span {
+        margin-right: 10px;
+    }
+
+
+/* Generic list */
+.view-list-block {
+    margin: 10px auto 40px auto;
+    display: block;
+    font-family: Oswald !important;
+    width: 100%;
+    padding: 10px;
+}
+
+    .view-list-block > .generic-list {
+        height: 150px;
+        line-height: unset;
+    }
+
+    .view-list-block .elements-content {
+        padding: 10px;
+        position: relative;
+    }
+
+    .view-list-block .elements-content-text {
+        font-family: 'Bodoni MT';
+        font-style: italic;
+        padding: 5px;
+    }
+
+    .view-list-block .elements-content-date {
+        width: auto;
+        color: #085da5;
+        position: absolute;
+        bottom: 0;
+        right: 10px;
+    }
+
+.view-weeks-sort-wrapper {
+    margin: 15px 0;
+    display: block;
+    overflow: hidden;
+    height: 55px;
+    line-height: 55px;
+    width: 100%;
+    position: relative;
+}
+
+    .view-weeks-sort-wrapper > h4 {
+        float: left;
+        line-height: unset !important;
+    }
+
+.view-sort-buttons-wrapper {
+    width: 100%;
+    max-width: 320px;
+    line-height: unset;
+    height: 100%;
+    display: block;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+    .view-sort-buttons-wrapper > button {
+        float: left;
+        height: 100%;
+        width: 45px;
+        font-size: 19px;
+    }
+
+.view-list-week {
+    color: #d32020;
+    height: 100%;
+    width: 220px;
+    border-radius: 3px;
+    color: #FFFF;
+    position: relative;
+    float: left;
+    margin: 0 5px;
+    line-height: unset;
+}
+
+    .view-list-week > input {
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .view-list-week > button {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-family: Dubai !important;
+        font-size: 19px;
+    }

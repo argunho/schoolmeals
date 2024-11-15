@@ -1,0 +1,101 @@
+﻿<PageTopBlock Heading="@Form.Heading" />
+
+<Response Form="Form" Reset="Reset" />
+
+<Loading Load="Form.Loading" />
+
+<EditForm Model="School" OnValidSubmit="OnValidSubmit" style="@((Form.Loading || (School == null && Form.Edit)) ? "display:none" : "")">
+    <DataAnnotationsValidator />
+
+    <!--Name-->
+    <div class="form-group">
+        <label id="name">Namn</label>
+        <InputText class="form-control" @bind-Value="@School.Name" id="name" disabled="@Form.Disabled" />
+        <ValidationMessage For="@(() => School.Name)" />
+    </div>
+
+    <!--Municipality-->
+    <div class="form-group">
+        <label for="list">Kommun</label>
+        <InputSelect class="form-control" @bind-Value="@School.MunicipalityId" disabled="@Form.Disabled" id="list">
+            <option selected="@School.MunicipalityId == 0">&nbsp; - Select kommun</option>
+            <GenericFormLists Api="School/GetMunicipalities" Id="@School.MunicipalityId" />
+
+            <ValidationMessage For="@(() => School.MunicipalityId)" />
+        </InputSelect>
+    </div>
+
+    <!--Addres-->
+    <div class="form-group">
+        <label id="name">Adress</label>
+        <InputText class="form-control" @bind-Value="@School.Address" id="name" disabled="@Form.Disabled" />
+    </div>
+    <!--Zip-->
+    <div class="form-group">
+        <label id="name">Postnummer</label>
+        <InputText class="form-control" @bind-Value="@School.Zip" id="name" disabled="@Form.Disabled" />
+    </div>
+    <!--Place-->
+    <div class="form-group">
+        <label id="name">Ort</label>
+        <InputText class="form-control" @bind-Value="@School.Place" id="name" disabled="@Form.Disabled" />
+    </div>
+    <!--Text-->
+    <div class="form-group">
+        <label id="text">Text</label>
+        <InputTextArea class="form-control" @bind-Value="@School.Text" id="text" disabled="@Form.Disabled"></InputTextArea>
+    </div>
+
+    <!--File upload-->
+    <FileUpload Form="Form" UploadImage="@(async () => await UploadImage(Form))" />
+
+        <!--Checkobx-->
+        <div class="form-group m-3">
+            <div class="form-check">
+                <InputCheckbox class="form-check-input" @bind-Value="@School.Open" id="check" disabled="@Form.Disabled" />
+                <label class="form-check-label" for="check">
+                    Synlig för alla besökare
+                </label>
+            </div>
+        </div>
+
+    <!--Buttons-->
+    <Buttons Waiting="Form.Disabled" />
+</EditForm>
+
+
+@code {
+    [Parameter] public SchoolViewModel School { get; set; }
+    [Parameter] public FormParams Form { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+    // Upload file
+    private async Task UploadImage(FormParams form = null)
+    {
+        await Task.Delay(100);
+
+        School.FileName = (form != null) ? form.FileName : null;
+        School.File = (form != null) ? form.FileBinary : null;
+    }
+
+    // Reset Form after request from server
+    protected async Task Reset()
+    {
+        if (Form.Request == "OK" && !Form.Edit)
+        {
+            Form.Image = false;
+            School = new SchoolViewModel();
+            Form.Disabled = false;
+            Form.Request = null;
+        }
+        else if (Form.Request == "OK")
+        {
+            School school = new School();
+            school = await Http.GetFromJsonAsync<School>($"School/{School.Id}");
+            Navigation.NavigateTo("school/" + school.Link);
+        } else
+        {
+            Form.Disabled = false;
+        }
+    }
+}

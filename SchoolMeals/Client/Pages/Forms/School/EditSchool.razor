@@ -1,0 +1,68 @@
+﻿@page "/edit-school/school/{SchoolId:int}"
+@attribute [Authorize]
+
+<SchoolForm School="School" Form="Form" OnValidSubmit="Edit" />
+
+@code {
+    private SchoolViewModel School = new SchoolViewModel();
+    public FormParams Form = new FormParams();
+    [Parameter] public int SchoolId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Form.Loading = true;
+        Form.Heading = "Redigera skolan ";
+        try
+        {
+            Form.Edit = true;
+            School = await Http.GetFromJsonAsync<SchoolViewModel>($"School/{SchoolId}");
+
+            if (School != null)
+            {
+                Form.Heading += School.Name;
+                Form.File = School.ImgUrl;
+                Form.Image = (Form.File != null);
+                School.MunicipalityId = School.Municipality.Id;
+            }
+            else
+            {
+                Form.Request = "BadRequest";
+                Form.Response = "Inga resultat hittades för denna begäran, eller så har du inte tillgång till att redigera den här sidan";
+            }
+
+            await Task.Delay(100);
+            Form.Loading = false;
+        }
+        catch (Exception e)
+        {
+            Form.Loading = false;
+            Form.Request = "Badrequest";
+            Form.Response = "\n\nError => " + e.Message;
+        }
+        //catch (AccessTokenNotAvailableException exception)
+        //{
+        //    exception.Redirect();
+        //}
+    }
+
+
+    // Submit method
+    private async Task Edit()
+    {
+        try
+        {
+            Form.Disabled = true;
+            var response = await Http.PutAsJsonAsync("School/" + SchoolId, School);
+            //var content = response.Content.ReadFromJsonAsync<School>();
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Form.Request = response.ReasonPhrase;
+            Form.Response = responseBody;
+        }
+        catch (Exception e)
+        {
+            Form.Request = "Badrequest";
+            Form.Response = "\n\nError => " + e.Message;
+        }
+    }
+}
+}
